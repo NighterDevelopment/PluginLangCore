@@ -1,0 +1,101 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Extract version from build.gradle
+        id: get_version
+        run: |
+          VERSION=$(grep "^version = " build.gradle | sed "s/version = '\(.*\)'/\1/")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ steps.get_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.get_version.outputs.version }} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.get_version.outputs.version }} does not exist"
+          fi
+
+      - name: Build with Gradle
+        if: steps.check_tag.outputs.exists == 'false'
+        run: ./gradlew clean build
+
+      - name: Create Git Tag
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v${{ steps.get_version.outputs.version }}" -m "Release version ${{ steps.get_version.outputs.version }}"
+          git push origin "v${{ steps.get_version.outputs.version }}"
+
+      - name: Create GitHub Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          body: |
+            ## PluginLangCore v${{ steps.get_version.outputs.version }}
+            
+            ### 📦 Artifacts
+            - Main JAR: `PluginLangCore-${{ steps.get_version.outputs.version }}.jar`
+            - Sources JAR: `PluginLangCore-${{ steps.get_version.outputs.version }}-sources.jar`
+            - Javadoc JAR: `PluginLangCore-${{ steps.get_version.outputs.version }}-javadoc.jar`
+            
+            ### 📚 Documentation
+            See [README.md](https://github.com/${{ github.repository }}/blob/main/README.md) for usage instructions.
+            
+            ### 🔗 Maven Dependency
+            ```xml
+            <dependency>
+                <groupId>io.github.pluginlangcore</groupId>
+                <artifactId>pluginlangcore</artifactId>
+                <version>${{ steps.get_version.outputs.version }}</version>
+            </dependency>
+            ```
+            
+            ### 🔗 Gradle Dependency
+            ```groovy
+            implementation 'io.github.pluginlangcore:pluginlangcore:${{ steps.get_version.outputs.version }}'
+            ```
+          draft: false
+          prerelease: false
+          files: |
+            build/libs/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Skip release
+        if: steps.check_tag.outputs.exists == 'true'
+        run: echo "Release v${{ steps.get_version.outputs.version }} already exists, skipping..."
+
