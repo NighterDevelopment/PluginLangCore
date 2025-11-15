@@ -9,7 +9,6 @@
  *   <li>User customization preservation</li>
  *   <li>Smart change detection</li>
  * </ul>
- * </p>
  * <p>
  * The updater system works by adding a version key to each language file and
  * comparing it against the plugin version. When an update is needed, it:
@@ -19,7 +18,6 @@
  *   <li>Applies user customizations to the new configuration</li>
  *   <li>Saves the merged result</li>
  * </ol>
- * </p>
  *
  * @see io.github.pluginlangcore.updater.LanguageUpdater
  * @see io.github.pluginlangcore.updater.Version

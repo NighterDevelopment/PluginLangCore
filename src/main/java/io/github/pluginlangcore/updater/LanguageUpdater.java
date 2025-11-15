@@ -26,18 +26,12 @@ import java.util.*;
  *   <li>Support for multiple languages</li>
  *   <li>Smart detection of meaningful changes</li>
  * </ul>
- * </p>
  * <p>
  * The updater adds a {@code language_version} key to each language file to track versions.
  * When the plugin version increases, it automatically merges new keys while preserving
  * user modifications.
- * </p>
- *
- * @author PluginLangCore Team
- * @version 1.0.0
- * @since 1.0.0
- *
- * @example
+ * <p>
+ * Example usage:
  * <pre>{@code
  * public class MyPlugin extends JavaPlugin {
  *     @Override
@@ -55,6 +49,10 @@ import java.util.*;
  *     }
  * }
  * }</pre>
+ *
+ * @author PluginLangCore Team
+ * @version 1.0.0
+ * @since 1.0.0
  */
 public class LanguageUpdater {
     private final String currentVersion;
@@ -111,7 +109,6 @@ public class LanguageUpdater {
      * @param plugin             The JavaPlugin instance
      * @param supportedLanguages List of language codes to support (e.g., "en_US", "vi_VN")
      *
-     * @example
      * <pre>{@code
      * // Update all file types for English and Vietnamese
      * new LanguageUpdater(this, Arrays.asList("en_US", "vi_VN"));
@@ -126,13 +123,8 @@ public class LanguageUpdater {
      * <p>
      * Use this constructor when you only want to update certain file types,
      * which can improve performance and reduce unnecessary file operations.
-     * </p>
-     *
-     * @param plugin             The JavaPlugin instance
-     * @param supportedLanguages List of language codes to support
-     * @param fileTypes          Specific file types to update
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * // Only update messages and GUI files
      * new LanguageUpdater(
@@ -142,6 +134,10 @@ public class LanguageUpdater {
      *     LanguageFileType.GUI
      * );
      * }</pre>
+     *
+     * @param plugin             The JavaPlugin instance
+     * @param supportedLanguages List of language codes to support
+     * @param fileTypes          Specific file types to update
      */
     public LanguageUpdater(JavaPlugin plugin, List<String> supportedLanguages, LanguageFileType... fileTypes) {
         this.plugin = plugin;
@@ -153,7 +149,6 @@ public class LanguageUpdater {
 
     /**
      * Checks and updates all language files for all supported languages.
-     * <p>
      * This method:
      * <ul>
      *   <li>Creates language directories if they don't exist</li>
@@ -162,11 +157,8 @@ public class LanguageUpdater {
      *   <li>Preserves user customizations</li>
      *   <li>Creates backups when necessary</li>
      * </ul>
-     * </p>
-     * <p>
      * This method is called automatically in the constructor but can be called
      * manually to force a re-check and update.
-     * </p>
      */
     public void checkAndUpdateLanguageFiles() {
         for (String language : supportedLanguages) {
@@ -196,7 +188,6 @@ public class LanguageUpdater {
      *   <li>Merges new keys with user values</li>
      *   <li>Saves updated file</li>
      * </ol>
-     * </p>
      *
      * @param language     The language code (e.g., "en_US")
      * @param languageFile The file to update
@@ -366,12 +357,8 @@ public class LanguageUpdater {
      * <p>
      * This method converts a nested YAML structure into a flat map where
      * keys are dot-separated paths and values are the leaf values.
-     * </p>
-     *
-     * @param config The configuration section to flatten
-     * @return A map of path to value
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * // YAML:
      * // player:
@@ -384,6 +371,9 @@ public class LanguageUpdater {
      * //   "player.level": 5
      * // }
      * }</pre>
+     *
+     * @param config The configuration section to flatten
+     * @return A map of path to value
      */
     private Map<String, Object> flattenConfig(ConfigurationSection config) {
         Map<String, Object> result = new HashMap<>();

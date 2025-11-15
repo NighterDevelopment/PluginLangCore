@@ -6,7 +6,6 @@
  *   <li>Color code translation (hex and legacy)</li>
  *   <li>Text formatting and manipulation</li>
  * </ul>
- * </p>
  *
  * @see io.github.pluginlangcore.util.ColorUtil
  * @since 1.0.0

@@ -8,9 +8,8 @@ import java.util.regex.Pattern;
 /**
  * Utility class for handling color code translations in Minecraft text.
  * <p>
- * Supports both legacy ampersand color codes (&amp;) and modern hex color codes (&#RRGGBB).
+ * Supports both legacy ampersand color codes (&amp;) and modern hex color codes (&amp;#RRGGBB).
  * This class handles the conversion of these codes to their Minecraft-compatible formats.
- * </p>
  *
  * @author PluginLangCore Team
  * @version 1.0.0
@@ -19,8 +18,8 @@ import java.util.regex.Pattern;
 public final class ColorUtil {
 
     /**
-     * Pattern to match hex color codes in the format &#RRGGBB.
-     * Example: &#FF5733 for an orange color
+     * Pattern to match hex color codes in the format &amp;#RRGGBB.
+     * Example: &amp;#FF5733 for an orange color
      */
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([A-Fa-f0-9]{6})");
 
@@ -37,19 +36,18 @@ public final class ColorUtil {
      * <p>
      * This method performs two translations:
      * <ul>
-     *   <li>Converts hex color codes (&#RRGGBB) to Minecraft's hex format</li>
+     *   <li>Converts hex color codes (&amp;#RRGGBB) to Minecraft's hex format</li>
      *   <li>Converts ampersand color codes (&amp;a, &amp;b, etc.) to section symbols (§)</li>
      * </ul>
-     * </p>
-     *
-     * @param message The message containing color codes to translate
-     * @return The translated message with Minecraft-compatible color codes, or null if input is null
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * String colored = ColorUtil.translateHexColorCodes("&#FF5733Hello &aWorld");
      * // Result will have the hex color applied to "Hello" and green color applied to "World"
      * }</pre>
+     *
+     * @param message The message containing color codes to translate
+     * @return The translated message with Minecraft-compatible color codes, or null if input is null
      */
     public static String translateHexColorCodes(String message) {
         if (message == null) {
@@ -82,16 +80,15 @@ public final class ColorUtil {
      *   <li>Format codes (§l for bold, §o for italic, etc.)</li>
      * </ul>
      * Useful for logging, console output, or length calculations.
-     * </p>
-     *
-     * @param message The message with color codes
-     * @return The message without any color codes, or null if input is null
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * String plain = ColorUtil.stripColors("§aGreen §bBlue &#FF5733Orange");
      * // Result: "Green Blue Orange"
      * }</pre>
+     *
+     * @param message The message with color codes
+     * @return The message without any color codes, or null if input is null
      */
     public static String stripColors(String message) {
         if (message == null) {
@@ -103,17 +100,16 @@ public final class ColorUtil {
     /**
      * Checks if a string contains any color codes.
      * <p>
-     * Detects both legacy color codes (§) and hex color codes (&#RRGGBB).
-     * </p>
-     *
-     * @param message The message to check
-     * @return true if the message contains color codes, false otherwise
-     *
-     * @example
+     * Detects both legacy color codes (§) and hex color codes (&amp;#RRGGBB).
+     * <p>
+     * Example usage:
      * <pre>{@code
      * boolean hasColors = ColorUtil.hasColors("§aHello"); // returns true
      * boolean hasColors2 = ColorUtil.hasColors("Hello"); // returns false
      * }</pre>
+     *
+     * @param message The message to check
+     * @return true if the message contains color codes, false otherwise
      */
     public static boolean hasColors(String message) {
         if (message == null) {
@@ -126,16 +122,15 @@ public final class ColorUtil {
      * Translates only hex color codes without touching legacy color codes.
      * <p>
      * Useful when you want to handle legacy codes separately or preserve them as-is.
-     * </p>
-     *
-     * @param message The message containing hex color codes
-     * @return The message with hex codes translated, or null if input is null
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * String result = ColorUtil.translateHexOnly("&#FF5733Hello &aWorld");
      * // Result will have hex color for "Hello", but "&a" will remain unchanged
      * }</pre>
+     *
+     * @param message The message containing hex color codes
+     * @return The message with hex codes translated, or null if input is null
      */
     public static String translateHexOnly(String message) {
         if (message == null) {
@@ -159,16 +154,15 @@ public final class ColorUtil {
      * Translates only legacy ampersand color codes without touching hex codes.
      * <p>
      * Useful when you want to handle hex codes separately or preserve them as-is.
-     * </p>
-     *
-     * @param message The message containing legacy color codes
-     * @return The message with legacy codes translated, or null if input is null
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * String result = ColorUtil.translateLegacyOnly("&#FF5733Hello &aWorld");
      * // Result will have "&a" converted to green, but "&#FF5733" will remain unchanged
      * }</pre>
+     *
+     * @param message The message containing legacy color codes
+     * @return The message with legacy codes translated, or null if input is null
      */
     public static String translateLegacyOnly(String message) {
         if (message == null) {

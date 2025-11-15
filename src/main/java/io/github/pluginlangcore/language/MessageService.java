@@ -25,17 +25,11 @@ import java.util.regex.Pattern;
  *   <li>Console logging with color stripping</li>
  *   <li>Placeholder replacement</li>
  * </ul>
- * </p>
  * <p>
  * The service caches key existence checks to improve performance and provides
  * methods for both player and console message delivery.
- * </p>
- *
- * @author PluginLangCore Team
- * @version 1.0.0
- * @since 1.0.0
- *
- * @example
+ * <p>
+ * Example usage:
  * <pre>{@code
  * LanguageManager langManager = new LanguageManager(plugin);
  * MessageService messageService = new MessageService(plugin, langManager);
@@ -51,6 +45,10 @@ import java.util.regex.Pattern;
  * // Send a console message
  * messageService.sendConsoleMessage("server_started");
  * }</pre>
+ *
+ * @author PluginLangCore Team
+ * @version 1.0.0
+ * @since 1.0.0
  */
 @RequiredArgsConstructor
 public class MessageService {
@@ -101,7 +99,6 @@ public class MessageService {
 
     /**
      * Sends a message to a Player with placeholders.
-     * <p>
      * Automatically handles player-specific features:
      * <ul>
      *   <li>Chat messages</li>
@@ -109,7 +106,6 @@ public class MessageService {
      *   <li>Action bar messages</li>
      *   <li>Sound effects</li>
      * </ul>
-     * </p>
      *
      * @param player       The player to receive the message
      * @param key          The message key from the language files
@@ -131,7 +127,6 @@ public class MessageService {
      * @param key          The message key from the language files
      * @param placeholders Map of placeholders to replace in the message
      *
-     * @example
      * <pre>{@code
      * Map<String, String> placeholders = new HashMap<>();
      * placeholders.put("amount", "100");
@@ -203,18 +198,17 @@ public class MessageService {
      * This method retrieves the message, applies placeholders, strips all
      * color codes, and logs it to the console. Useful for server logging
      * and administrative notifications.
-     * </p>
-     *
-     * @param key          The message key from the language files
-     * @param placeholders Map of placeholders to replace in the message
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * Map<String, String> placeholders = new HashMap<>();
      * placeholders.put("player", "Steve");
      * placeholders.put("reason", "Flying");
      * messageService.sendConsoleMessage("player_kicked", placeholders);
      * }</pre>
+     *
+     * @param key          The message key from the language files
+     * @param placeholders Map of placeholders to replace in the message
      */
     public void sendConsoleMessage(String key, Map<String, String> placeholders) {
         // Validate the message key exists

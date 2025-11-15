@@ -8,7 +8,6 @@
  *   <li>Player message delivery with titles, sounds, and action bars</li>
  *   <li>Console logging with color code stripping</li>
  * </ul>
- * </p>
  *
  * @see io.github.pluginlangcore.language.LanguageManager
  * @see io.github.pluginlangcore.language.MessageService

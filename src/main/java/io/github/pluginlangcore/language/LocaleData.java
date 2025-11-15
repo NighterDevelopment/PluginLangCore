@@ -13,22 +13,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
  *   <li><b>formatting</b> - Number formatting, entity names, and text transformations</li>
  *   <li><b>items</b> - Vanilla and custom item names and lore</li>
  * </ul>
- * </p>
  * <p>
  * Being a record, this class is immutable and provides automatic implementations
  * of equals(), hashCode(), and toString() methods.
- * </p>
- *
- * @param messages   Configuration containing player messages and system notifications
- * @param gui        Configuration containing GUI-related text (titles, item names, lore)
- * @param formatting Configuration containing formatting rules for numbers, names, etc.
- * @param items      Configuration containing item names and lore definitions
- *
- * @author PluginLangCore Team
- * @version 1.0.0
- * @since 1.0.0
- *
- * @example
+ * <p>
+ * Example usage:
  * <pre>{@code
  * YamlConfiguration messages = YamlConfiguration.loadConfiguration(new File("messages.yml"));
  * YamlConfiguration gui = YamlConfiguration.loadConfiguration(new File("gui.yml"));
@@ -38,6 +27,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
  * LocaleData localeData = new LocaleData(messages, gui, formatting, items);
  * String prefix = localeData.messages().getString("prefix");
  * }</pre>
+ *
+ * @param messages   Configuration containing player messages and system notifications
+ * @param gui        Configuration containing GUI-related text (titles, item names, lore)
+ * @param formatting Configuration containing formatting rules for numbers, names, etc.
+ * @param items      Configuration containing item names and lore definitions
+ *
+ * @author PluginLangCore Team
+ * @version 1.0.0
+ * @since 1.0.0
  */
 public record LocaleData(
         YamlConfiguration messages,

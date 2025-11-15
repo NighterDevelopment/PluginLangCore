@@ -17,13 +17,8 @@ import org.jetbrains.annotations.NotNull;
  *   <li>1.0</li>
  *   <li>1</li>
  * </ul>
- * </p>
- *
- * @author PluginLangCore Team
- * @version 1.0.0
- * @since 1.0.0
- *
- * @example
+ * <p>
+ * Example usage:
  * <pre>{@code
  * Version v1 = new Version("1.2.3");
  * Version v2 = new Version("1.2.4");
@@ -32,6 +27,10 @@ import org.jetbrains.annotations.NotNull;
  *     System.out.println("v1 is older than v2");
  * }
  * }</pre>
+ *
+ * @author PluginLangCore Team
+ * @version 1.0.0
+ * @since 1.0.0
  */
 public class Version implements Comparable<Version> {
     private final int[] parts;
@@ -43,17 +42,16 @@ public class Version implements Comparable<Version> {
      * The constructor parses the version string and extracts numeric parts.
      * Non-numeric prefixes (like 'v') are automatically removed.
      * Missing parts default to 0.
-     * </p>
-     *
-     * @param version The version string to parse (e.g., "1.2.3" or "v1.2.3.4")
-     * @throws NullPointerException if version is null
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * Version v1 = new Version("1.2.3");     // Parses as 1.2.3.0
      * Version v2 = new Version("v2.0");      // Parses as 2.0.0.0
      * Version v3 = new Version("1.0.0.5");   // Parses as 1.0.0.5
      * }</pre>
+     *
+     * @param version The version string to parse (e.g., "1.2.3" or "v1.2.3.4")
+     * @throws NullPointerException if version is null
      */
     public Version(String version) {
         if (version == null) {
@@ -87,13 +85,8 @@ public class Version implements Comparable<Version> {
      * Returns a negative integer, zero, or a positive integer as this version
      * is less than, equal to, or greater than the specified version.
      * Comparison is done part-by-part from major to build version.
-     * </p>
-     *
-     * @param other The version to compare to
-     * @return A negative integer, zero, or a positive integer as this version
-     *         is less than, equal to, or greater than the specified version
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * Version v1 = new Version("1.2.3");
      * Version v2 = new Version("1.2.4");
@@ -103,6 +96,10 @@ public class Version implements Comparable<Version> {
      * v2.compareTo(v1); // Returns positive (v2 > v1)
      * v1.compareTo(v3); // Returns 0 (v1 == v3)
      * }</pre>
+     *
+     * @param other The version to compare to
+     * @return A negative integer, zero, or a positive integer as this version
+     *         is less than, equal to, or greater than the specified version
      */
     @Override
     public int compareTo(@NotNull Version other) {
@@ -120,16 +117,15 @@ public class Version implements Comparable<Version> {
      * <p>
      * The format is "major.minor.patch" or "major.minor.patch.build" if the build part is non-zero.
      * Trailing zeros in the build part are omitted for cleaner output.
-     * </p>
-     *
-     * @return The version string (e.g., "1.2.3" or "1.2.3.5")
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * new Version("1.2.3").toString();   // Returns "1.2.3"
      * new Version("1.2.3.0").toString(); // Returns "1.2.3"
      * new Version("1.2.3.5").toString(); // Returns "1.2.3.5"
      * }</pre>
+     *
+     * @return The version string (e.g., "1.2.3" or "1.2.3.5")
      */
     @Override
     public String toString() {
@@ -153,12 +149,8 @@ public class Version implements Comparable<Version> {
      * Checks if this version is newer than another version.
      * <p>
      * This is a convenience method equivalent to {@code compareTo(other) > 0}.
-     * </p>
-     *
-     * @param other The version to compare against
-     * @return true if this version is newer, false otherwise
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * Version v1 = new Version("1.2.4");
      * Version v2 = new Version("1.2.3");
@@ -166,6 +158,9 @@ public class Version implements Comparable<Version> {
      * v1.isNewerThan(v2); // Returns true
      * v2.isNewerThan(v1); // Returns false
      * }</pre>
+     *
+     * @param other The version to compare against
+     * @return true if this version is newer, false otherwise
      */
     public boolean isNewerThan(Version other) {
         return compareTo(other) > 0;
@@ -180,7 +175,6 @@ public class Version implements Comparable<Version> {
      * @param other The version to compare against
      * @return true if this version is older, false otherwise
      *
-     * @example
      * <pre>{@code
      * Version v1 = new Version("1.2.3");
      * Version v2 = new Version("1.2.4");
@@ -197,12 +191,8 @@ public class Version implements Comparable<Version> {
      * Checks if this version equals another version.
      * <p>
      * This is a convenience method equivalent to {@code compareTo(other) == 0}.
-     * </p>
-     *
-     * @param other The version to compare against
-     * @return true if versions are equal, false otherwise
-     *
-     * @example
+     * <p>
+     * Example usage:
      * <pre>{@code
      * Version v1 = new Version("1.2.3");
      * Version v2 = new Version("1.2.3.0");
@@ -211,6 +201,9 @@ public class Version implements Comparable<Version> {
      * v1.isEqualTo(v2); // Returns true
      * v1.isEqualTo(v3); // Returns false
      * }</pre>
+     *
+     * @param other The version to compare against
+     * @return true if versions are equal, false otherwise
      */
     public boolean isEqualTo(Version other) {
         return compareTo(other) == 0;

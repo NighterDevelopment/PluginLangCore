@@ -21,6 +21,7 @@ import java.util.logging.Level;
  * Main language management system for Minecraft plugins.
  * <p>
  * This class provides comprehensive internationalization (i18n) support with features including:
+ * </p>
  * <ul>
  *   <li>Multiple language file types (messages, GUI, formatting, items)</li>
  *   <li>Automatic file creation and merging with defaults</li>
@@ -30,17 +31,11 @@ import java.util.logging.Level;
  *   <li>Entity and material name formatting</li>
  *   <li>Number formatting with locale-specific patterns</li>
  * </ul>
- * </p>
  * <p>
  * The LanguageManager supports multiple language file types through the {@link LanguageFileType} enum,
  * allowing for organized separation of different types of translatable content.
  * </p>
- *
- * @author PluginLangCore Team
- * @version 1.0.0
- * @since 1.0.0
- *
- * @example
+ * <b>Usage Example:</b>
  * <pre>{@code
  * // Basic initialization
  * LanguageManager langManager = new LanguageManager(plugin);
@@ -54,6 +49,10 @@ import java.util.logging.Level;
  * // Reload language files
  * langManager.reloadLanguages();
  * }</pre>
+ *
+ * @author PluginLangCore Team
+ * @version 1.0.0
+ * @since 1.0.0
  */
 public class LanguageManager {
     private final JavaPlugin plugin;
@@ -91,7 +90,6 @@ public class LanguageManager {
 
     /**
      * Enum representing the different language file types supported by the language manager.
-     * <p>
      * Each file type serves a specific purpose:
      * <ul>
      *   <li><b>MESSAGES</b> - Contains player messages, notifications, and command responses</li>
@@ -99,7 +97,6 @@ public class LanguageManager {
      *   <li><b>FORMATTING</b> - Contains formatting rules for numbers, entity names, etc.</li>
      *   <li><b>ITEMS</b> - Contains vanilla and custom item names and lore</li>
      * </ul>
-     * </p>
      */
     @Getter
     public enum LanguageFileType {
@@ -132,7 +129,6 @@ public class LanguageManager {
 
     /**
      * Constructs a LanguageManager with all file types enabled.
-     * <p>
      * This constructor:
      * <ul>
      *   <li>Reads the default locale from plugin config (defaults to "en_US")</li>
@@ -140,7 +136,6 @@ public class LanguageManager {
      *   <li>Initializes all caches with default capacities</li>
      *   <li>Loads and caches the default locale</li>
      * </ul>
-     * </p>
      *
      * @param plugin The JavaPlugin instance using this language manager
      */
@@ -158,7 +153,6 @@ public class LanguageManager {
      * @param plugin    The JavaPlugin instance using this language manager
      * @param fileTypes Specific file types to load (e.g., only MESSAGES and GUI)
      *
-     * @example
      * <pre>{@code
      * // Only load messages and GUI files
      * LanguageManager langManager = new LanguageManager(
@@ -196,14 +190,12 @@ public class LanguageManager {
 
     /**
      * Loads language files for the default locale.
-     * <p>
      * This method:
      * <ul>
      *   <li>Creates the language directory if it doesn't exist</li>
      *   <li>Loads all active file types for the default locale</li>
      *   <li>Merges default values with user configuration</li>
      * </ul>
-     * </p>
      */
     public void loadLanguages() {
         loadLanguages(activeFileTypes.toArray(new LanguageFileType[0]));
@@ -258,7 +250,6 @@ public class LanguageManager {
      *   <li>Re-caches the default locale</li>
      * </ul>
      * Call this method after changing language files or the default locale.
-     * </p>
      */
     public void reloadLanguages() {
         // Clear all caches first to avoid using stale data
@@ -1053,7 +1044,6 @@ public class LanguageManager {
      *   <li>1,000,000,000 → 1B</li>
      *   <li>1,000,000,000,000 → 1T</li>
      * </ul>
-     * </p>
      *
      * @param number The number to format
      * @return The formatted number string
