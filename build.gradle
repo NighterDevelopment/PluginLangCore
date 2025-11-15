@@ -35,3 +35,52 @@ tasks.withType(JavaCompile).configureEach {
 javadoc {
     options.encoding = 'UTF-8'
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'io.github'
+            artifactId = 'pluginlangcore'
+            version = project.version
+            from components.java
+
+            pom {
+                name = 'PluginLangCore'
+                description = 'A comprehensive language and message management library for Minecraft plugins'
+                url = 'https://github.com/NighterDevelopment/PluginLangCore'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'nighter'
+                        name = 'Nighter'
+                        email = 'notnighter@gmail.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/NighterDevelopment/PluginLangCore.git'
+                    developerConnection = 'scm:git:ssh://github.com/NighterDevelopment/PluginLangCore.git'
+                    url = 'https://github.com/NighterDevelopment/PluginLangCore'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/NighterDevelopment/PluginLangCore")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
