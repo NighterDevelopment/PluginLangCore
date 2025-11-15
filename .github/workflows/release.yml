@@ -117,20 +117,20 @@ jobs:
             ### 🔗 Maven Dependency
             ```xml
             <dependency>
-                <groupId>io.github.pluginlangcore</groupId>
-                <artifactId>pluginlangcore</artifactId>
+                <groupId>com.github.NighterDevelopment</groupId>
+                <artifactId>PluginLangCore</artifactId>
                 <version>${{ env.VERSION }}</version>
             </dependency>
             ```
             
             ### 🔗 Gradle Dependency (Kotlin DSL)
             ```kotlin
-            implementation("io.github.pluginlangcore:pluginlangcore:${{ env.VERSION }}")
+            implementation("com.github.NighterDevelopment:PluginLangCore:${{ env.VERSION }}")
             ```
             
             ### 🔗 Gradle Dependency (Groovy)
             ```groovy
-            implementation 'io.github.pluginlangcore:pluginlangcore:${{ env.VERSION }}'
+            implementation 'com.github.NighterDevelopment:PluginLangCore:${{ env.VERSION }}'
             ```
           draft: false
           prerelease: false

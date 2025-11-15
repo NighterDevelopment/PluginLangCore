@@ -28,8 +28,8 @@ A comprehensive, high-performance language and message management library for Mi
 
 <dependencies>
     <dependency>
-        <groupId>io.github.pluginlangcore</groupId>
-        <artifactId>pluginlangcore</artifactId>
+        <groupId>com.github.NighterDevelopment</groupId>
+        <artifactId>PluginLangCore</artifactId>
         <version>1.0.0</version>
         <scope>compile</scope>
     </dependency>
@@ -44,7 +44,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.pluginlangcore:pluginlangcore:1.0.0'
+    implementation 'com.github.NighterDevelopment:PluginLangCore:1.0.0'
 }
 ```
 
