@@ -1,52 +1,91 @@
 plugins {
-    id 'java'
-    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id 'java-library'
+    id 'maven-publish'
 }
 
-group = 'github.nighter'
-version = '1.0'
+group = 'io.github.pluginlangcore'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
-    maven {
-        name = "papermc-repo"
-        url = "https://repo.papermc.io/repository/maven-public/"
-    }
+    maven { name = "papermc-repo"; url = "https://repo.papermc.io/repository/maven-public/" }
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
+    // Paper API - compileOnly because servers provide this
+    compileOnly 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
+
+    // Lombok for cleaner code
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'
 }
 
-tasks {
-    runServer {
-        minecraftVersion("1.21")
-    }
-}
-
-def targetJavaVersion = 21
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    sourceCompatibility = javaVersion
-    targetCompatibility = javaVersion
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    withJavadocJar()
+    withSourcesJar()
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        options.release.set(targetJavaVersion)
-    }
+    options.release.set(21)
 }
 
-processResources {
-    def props = [version: version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('paper-plugin.yml') {
-        expand props
+javadoc {
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+    options.links(
+            'https://jd.papermc.io/paper/1.21/',
+            'https://javadoc.io/doc/org.projectlombok/lombok/latest/'
+    )
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'io.github.pluginlangcore'
+            artifactId = 'pluginlangcore'
+            version = project.version
+            from components.java
+
+            pom {
+                name = 'PluginLangCore'
+                description = 'A comprehensive language and message management library for Minecraft plugins'
+                url = 'https://github.com/NighterDevelopment/PluginLangCore'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'nighter'
+                        name = 'Nighter'
+                        email = 'notnighter@gmail.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/NighterDevelopment/PluginLangCore.git'
+                    developerConnection = 'scm:git:ssh://github.com/NighterDevelopment/PluginLangCore.git'
+                    url = 'https://github.com/NighterDevelopment/PluginLangCore'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/YOUR_USERNAME/PluginLangCore")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
