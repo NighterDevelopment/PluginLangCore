@@ -45,12 +45,14 @@ dependencies {
 Create `src/main/resources/language/en_US/messages.yml`:
 ```yaml
 prefix: "&7[&aMyPlugin&7] &r"
+
 welcome:
   enabled: true
   message: "&aWelcome {player}!"
   title: "&aWelcome!"
   subtitle: "&7{player}"
   sound: "ENTITY_PLAYER_LEVELUP"
+
 goodbye:
   enabled: true
   message: "&cSee you later, {player}!"
