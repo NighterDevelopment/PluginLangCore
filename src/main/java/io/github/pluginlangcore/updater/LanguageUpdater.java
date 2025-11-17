@@ -285,13 +285,8 @@ public class LanguageUpdater {
                 destinationFile.getParentFile().mkdirs();
                 Files.write(destinationFile.toPath(), newLines, StandardCharsets.UTF_8);
             } else {
-                // Resource not found - this is normal if the plugin doesn't provide this file type
-                // Only log as warning if this was explicitly enabled
-                plugin.getLogger().warning("Default " + fileType.getFileName() + " for " + language +
-                        " not found in the plugin's resources.");
-
-                // Don't create empty file - let the LanguageManager handle missing files
-                // This prevents creating unwanted empty language files
+                // Resource not found - this is expected if the plugin doesn't provide this file type
+                // Silently skip without warning since this is normal behavior
                 return;
             }
         } catch (IOException e) {

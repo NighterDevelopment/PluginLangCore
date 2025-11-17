@@ -36,7 +36,7 @@
  *   <li>Multiple language file types (messages, GUI, formatting, items)</li>
  *   <li>Automatic language file updates with version tracking</li>
  *   <li>Advanced LRU caching with statistics</li>
- *   <li>Hex color code support (&#RRGGBB)</li>
+ *   <li>Hex color code support (&amp;#RRGGBB)</li>
  *   <li>Placeholder replacement</li>
  *   <li>Title, subtitle, and action bar support</li>
  *   <li>Sound effect integration</li>
