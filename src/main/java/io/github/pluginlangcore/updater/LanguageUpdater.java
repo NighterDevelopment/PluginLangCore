@@ -203,7 +203,10 @@ public class LanguageUpdater {
             // Create the file if it doesn't exist
             if (!languageFile.exists()) {
                 createDefaultLanguageFileWithHeader(language, languageFile, fileType);
-                plugin.getLogger().info("Created new " + fileType.getFileName() + " for " + language);
+                // Only log success if the file was actually created
+                if (languageFile.exists()) {
+                    plugin.getLogger().info("Created new " + fileType.getFileName() + " for " + language);
+                }
                 return;
             }
 
@@ -282,18 +285,14 @@ public class LanguageUpdater {
                 destinationFile.getParentFile().mkdirs();
                 Files.write(destinationFile.toPath(), newLines, StandardCharsets.UTF_8);
             } else {
+                // Resource not found - this is normal if the plugin doesn't provide this file type
+                // Only log as warning if this was explicitly enabled
                 plugin.getLogger().warning("Default " + fileType.getFileName() + " for " + language +
                         " not found in the plugin's resources.");
 
-                // Create empty file with just version
-                destinationFile.getParentFile().mkdirs();
-
-                // Create basic YAML with just the version
-                YamlConfiguration emptyConfig = new YamlConfiguration();
-                emptyConfig.set(LANGUAGE_VERSION_KEY, currentVersion);
-                emptyConfig.set("_note", "This is an empty " + fileType.getFileName() +
-                        " created because no default was found in the plugin resources.");
-                emptyConfig.save(destinationFile);
+                // Don't create empty file - let the LanguageManager handle missing files
+                // This prevents creating unwanted empty language files
+                return;
             }
         } catch (IOException e) {
             plugin.getLogger().severe("Failed to create default language file " + fileType.getFileName() +

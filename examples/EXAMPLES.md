@@ -54,6 +54,87 @@ public class MyPlugin extends JavaPlugin {
 }
 ```
 
+## Example 1.5: Using Only Specific File Types (Recommended)
+
+**Important:** If your plugin only uses certain language file types (e.g., only messages), you should specify them explicitly in both the `LanguageUpdater` and `LanguageManager` constructors. This prevents the creation of unnecessary empty language files.
+
+```java
+package com.example.myplugin;
+
+import io.github.pluginlangcore.language.LanguageManager;
+import io.github.pluginlangcore.language.MessageService;
+import io.github.pluginlangcore.updater.LanguageUpdater;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
+
+public class MyPlugin extends JavaPlugin {
+    
+    private LanguageManager languageManager;
+    private MessageService messageService;
+    
+    @Override
+    public void onEnable() {
+        // Save default config
+        saveDefaultConfig();
+        
+        // IMPORTANT: Specify the same file types in both LanguageUpdater and LanguageManager
+        // This example only uses MESSAGES, so we only enable that file type
+        
+        // Initialize language updater with ONLY the file types you need
+        new LanguageUpdater(
+            this, 
+            Arrays.asList("en_US", "vi_VN"),
+            LanguageUpdater.LanguageFileType.MESSAGES  // Only messages.yml
+        );
+        
+        // Initialize language manager with the SAME file types
+        languageManager = new LanguageManager(
+            this,
+            LanguageManager.LanguageFileType.MESSAGES  // Only messages.yml
+        );
+        
+        messageService = new MessageService(this, languageManager);
+        
+        getLogger().info("Language system initialized (messages only)");
+    }
+}
+```
+
+### Example: Using Multiple Specific File Types
+
+If you need messages and GUI files but not items or formatting:
+
+```java
+@Override
+public void onEnable() {
+    saveDefaultConfig();
+    
+    // Enable MESSAGES and GUI only
+    new LanguageUpdater(
+        this, 
+        Arrays.asList("en_US", "vi_VN"),
+        LanguageUpdater.LanguageFileType.MESSAGES,
+        LanguageUpdater.LanguageFileType.GUI
+    );
+    
+    languageManager = new LanguageManager(
+        this,
+        LanguageManager.LanguageFileType.MESSAGES,
+        LanguageManager.LanguageFileType.GUI
+    );
+    
+    messageService = new MessageService(this, languageManager);
+}
+```
+
+**Benefits:**
+- Only creates language files you actually use
+- Reduces file clutter in the language directory
+- Prevents "file not found" warnings for unused file types
+- Improves plugin initialization performance
+- Makes it clear which language features your plugin uses
+
 ## Example 2: Command with Messages
 
 ```java

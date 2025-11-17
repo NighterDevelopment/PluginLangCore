@@ -338,8 +338,9 @@ public class LanguageManager {
             }
         }
 
-        // Create file if it doesn't exist and the default resource exists
-        if (!file.exists() && defaultResourceExists) {
+        // Only create file if it doesn't exist, the default resource exists, AND the file type is active
+        boolean isActiveFileType = isFileTypeActive(fileName);
+        if (!file.exists() && defaultResourceExists && isActiveFileType) {
             try (InputStream inputStream = plugin.getResource("language/" + defaultLocale + "/" + fileName)) {
                 if (inputStream != null) {
                     file.getParentFile().mkdirs();
@@ -387,6 +388,21 @@ public class LanguageManager {
         } else {
             return new YamlConfiguration();
         }
+    }
+
+    /**
+     * Checks if a file type is active based on the file name.
+     *
+     * @param fileName The file name to check
+     * @return true if the file type is active, false otherwise
+     */
+    private boolean isFileTypeActive(String fileName) {
+        for (LanguageFileType fileType : activeFileTypes) {
+            if (fileType.getFileName().equals(fileName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

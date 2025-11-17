@@ -50,6 +50,62 @@ dependencies {
 
 ## Quick Start
 
+### Resource Directory Structure
+
+**Important:** You need to create the language files in your plugin's resources directory. The library will copy these default files to the plugin's data folder on first run.
+
+#### Recommended Structure
+
+```
+src/main/resources/
+├── plugin.yml
+├── config.yml
+└── language/
+    ├── en_US/
+    │   ├── messages.yml      (Player messages, notifications)
+    │   ├── gui.yml           (GUI titles, item names, lore)
+    │   ├── formatting.yml    (Number & entity name formatting)
+    │   └── items.yml         (Vanilla & custom item names)
+    ├── vi_VN/
+    │   ├── messages.yml
+    │   ├── gui.yml
+    │   ├── formatting.yml
+    │   └── items.yml
+    └── de_DE/
+        ├── messages.yml
+        └── gui.yml
+```
+
+**Pattern:** `language/{language_code}/{file_type}.yml`
+
+#### Minimal Setup (Messages Only)
+
+If you only need player messages, create just what you need:
+
+```
+src/main/resources/
+├── plugin.yml
+├── config.yml
+└── language/
+    └── en_US/
+        └── messages.yml
+```
+
+Then in your code, specify only the file types you're using:
+
+```java
+// Only enable MESSAGES file type
+new LanguageUpdater(this, List.of("en_US"),
+    LanguageUpdater.LanguageFileType.MESSAGES
+);
+
+languageManager = new LanguageManager(this,
+    LanguageManager.LanguageFileType.MESSAGES
+);
+```
+
+> **💡 Tip:** Only create and enable the file types you actually use. This prevents empty files from being created and reduces warnings.
+
 ### Basic Setup
 
 ```java
@@ -64,17 +120,23 @@ public class MyPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         // Initialize automatic language file updater (optional but recommended)
-        new LanguageUpdater(this, Arrays.asList("en_US", "vi_VN"));
+        // IMPORTANT: Specify the same file types in both LanguageUpdater and LanguageManager
+        new LanguageUpdater(this, Arrays.asList("en_US", "vi_VN"),
+            LanguageManager.LanguageFileType.MESSAGES,
+            LanguageManager.LanguageFileType.GUI
+        );
         
-        // Initialize with all file types
-        languageManager = new LanguageManager(this);
+        // Initialize with specific file types (recommended)
+        languageManager = new LanguageManager(this, 
+            LanguageManager.LanguageFileType.MESSAGES, 
+            LanguageManager.LanguageFileType.GUI
+        );
+        
         messageService = new MessageService(this, languageManager);
         
-        // Or initialize with specific file types
-        languageManager = new LanguageManager(this, 
-            LanguageFileType.MESSAGES, 
-            LanguageFileType.GUI
-        );
+        // Or initialize with all file types (if you use all)
+        languageManager = new LanguageManager(this);
+        messageService = new MessageService(this, languageManager);
     }
 }
 ```
@@ -144,14 +206,20 @@ String smallCaps = languageManager.getSmallCaps("Hello World"); // Returns "ʜ�
 
 ## Language File Structure
 
-PluginLangCore supports four types of language files:
+PluginLangCore supports four types of language files. Each file should be placed in your plugin's resources directory following the pattern: `language/{language_code}/{file_type}.yml`
 
 ### 1. messages.yml
-Player messages, notifications, and command responses.
+**Location:** `src/main/resources/language/en_US/messages.yml`  
+**Purpose:** Player messages, notifications, and command responses.
 
 ```yaml
+# Language file version - Automatically managed by LanguageUpdater
+language_version: 1.0.0
+
+# Message prefix (applied to all messages by default)
 prefix: "&7[&aMyPlugin&7] &r"
 
+# Example messages
 welcome:
   enabled: true
   message: "Welcome to the server, {player}!"
@@ -163,12 +231,26 @@ welcome:
 player_join:
   enabled: true
   message: "&a{player} has joined the server!"
+
+no_permission:
+  enabled: true
+  message: "&cYou don't have permission to do that!"
+
+reward_received:
+  enabled: true
+  message: "&aYou received {amount} coins!"
+  title: "&aReward!"
+  subtitle: "&e+{amount} coins"
+  sound: "ENTITY_EXPERIENCE_ORB_PICKUP"
 ```
 
 ### 2. gui.yml
-GUI titles, item names, and descriptions.
+**Location:** `src/main/resources/language/en_US/gui.yml`  
+**Purpose:** GUI titles, item names, and descriptions.
 
 ```yaml
+language_version: 1.0.0
+
 menu:
   main:
     title: "&8Main Menu"
@@ -178,35 +260,118 @@ menu:
         lore:
           - "&7Click to open settings"
           - "&7Current: {setting}"
+      
+      close:
+        name: "&cClose"
+        lore:
+          - "&7Click to close this menu"
+  
+  shop:
+    title: "&6Shop Menu"
+    item:
+      diamond:
+        name: "&bDiamond"
+        lore:
+          - "&7Price: &e{price}"
+          - ""
+          - "&eClick to purchase"
 ```
 
 ### 3. formatting.yml
-Number formatting and entity names.
+**Location:** `src/main/resources/language/en_US/formatting.yml`  
+**Purpose:** Number formatting and entity names.
 
 ```yaml
-format_number:
-  thousand: "{s}K"
-  million: "{s}M"
-  billion: "{s}B"
-  trillion: "{s}T"
-  default: "{s}"
+language_version: 1.0.0
 
+# Number abbreviation formats
+format_number:
+  thousand: "{s}K"    # 1000 -> 1K
+  million: "{s}M"     # 1000000 -> 1M
+  billion: "{s}B"     # 1000000000 -> 1B
+  trillion: "{s}T"    # 1000000000000 -> 1T
+  default: "{s}"      # Below 1000
+
+# Custom mob name translations
 mob_names:
   CAVE_SPIDER: "&cCave Spider"
   ZOMBIE: "&2Zombie"
   SKELETON: "&7Skeleton"
+  CREEPER: "&aCreeper"
+  ENDER_DRAGON: "&5&lEnder Dragon"
 ```
 
 ### 4. items.yml
-Vanilla and custom item names and lore.
+**Location:** `src/main/resources/language/en_US/items.yml`  
+**Purpose:** Vanilla and custom item names and lore.
 
 ```yaml
+language_version: 1.0.0
+
+# Vanilla item overrides
 item:
   DIAMOND_SWORD:
     name: "&bDiamond Sword"
     lore:
       - "&7A powerful weapon"
       - "&7Durability: {durability}"
+  
+  GOLDEN_APPLE:
+    name: "&6Golden Apple"
+    lore:
+      - "&7Heals and grants buffs"
+      - "&7Rarity: &6Rare"
+
+# Custom items
+custom:
+  magic_wand:
+    name: "&5&lMagic Wand"
+    lore:
+      - "&7A mystical wand"
+      - "&7Level: {level}"
+      - ""
+      - "&eRight-click to use"
+```
+
+### Example: Multi-language Support
+
+**English (en_US):**
+```
+src/main/resources/language/en_US/messages.yml
+```
+```yaml
+language_version: 1.0.0
+prefix: "&7[&aPlugin&7] &r"
+
+welcome:
+  enabled: true
+  message: "Welcome, {player}!"
+```
+
+**Vietnamese (vi_VN):**
+```
+src/main/resources/language/vi_VN/messages.yml
+```
+```yaml
+language_version: 1.0.0
+prefix: "&7[&aPlugin&7] &r"
+
+welcome:
+  enabled: true
+  message: "Chào mừng, {player}!"
+```
+
+**German (de_DE):**
+```
+src/main/resources/language/de_DE/messages.yml
+```
+```yaml
+language_version: 1.0.0
+prefix: "&7[&aPlugin&7] &r"
+
+welcome:
+  enabled: true
+  message: "Willkommen, {player}!"
 ```
 
 ## Advanced Features
@@ -304,12 +469,51 @@ The library will automatically:
 
 ## Best Practices
 
-1. **Always use placeholders** instead of string concatenation
-2. **Cache MessageService and LanguageManager** instances
-3. **Clear caches** when reloading language files
-4. **Use appropriate file types** to reduce memory usage
-5. **Provide default language files** in your plugin resources
-6. **Use meaningful message keys** that describe the content
+### 1. Resource Structure
+- ✅ **DO:** Place language files in `src/main/resources/language/{language_code}/`
+- ✅ **DO:** Follow the pattern: `language/{language_code}/{file_type}.yml`
+- ✅ **DO:** Only create file types you actually use
+- ✅ **DO:** Always provide at least one default language (e.g., en_US)
+- ❌ **DON'T:** Create language files directly in the plugin data folder
+
+### 2. File Type Selection
+- ✅ **DO:** Specify only the file types you need in both `LanguageUpdater` and `LanguageManager`
+- ✅ **DO:** Match file types between `LanguageUpdater` and `LanguageManager` constructors
+- ❌ **DON'T:** Use all file types if you only need messages
+
+**Example:**
+```java
+// Good - Only uses what's needed
+new LanguageUpdater(this, List.of("en_US"),
+    LanguageFileType.MESSAGES
+);
+languageManager = new LanguageManager(this,
+    LanguageFileType.MESSAGES
+);
+
+// Bad - Creates unnecessary files
+new LanguageUpdater(this, List.of("en_US")); // All types
+languageManager = new LanguageManager(this,
+    LanguageFileType.MESSAGES  // Only messages
+);
+```
+
+### 3. Code Practices
+- ✅ **DO:** Always use placeholders instead of string concatenation
+- ✅ **DO:** Cache `MessageService` and `LanguageManager` instances
+- ✅ **DO:** Clear caches when reloading language files
+- ✅ **DO:** Use meaningful message keys that describe the content
+- ✅ **DO:** Run `LanguageUpdater` before initializing `LanguageManager`
+
+### 4. Message Keys
+- ✅ **DO:** Use hierarchical keys: `category.subcategory.item`
+- ✅ **DO:** Use descriptive names: `player_join_broadcast`, `no_permission`
+- ❌ **DON'T:** Use vague keys: `msg1`, `text2`, `error`
+
+### 5. Performance
+- ✅ **DO:** Take advantage of the built-in LRU cache
+- ✅ **DO:** Use cache statistics to monitor performance
+- ❌ **DON'T:** Repeatedly call `getMessage()` for the same key in loops
 
 ## Performance
 
@@ -331,6 +535,83 @@ The library will automatically:
 - **Java**: 21+
 - **Server**: Paper or compatible forks
 
+## Troubleshooting
+
+### Issue: "Default {file}.yml not found in the plugin's resources"
+
+**Cause:** The language file doesn't exist in your plugin's resources.
+
+**Solution:**
+1. Create the file in `src/main/resources/language/{language_code}/{file}.yml`
+2. Or disable that file type if you don't need it:
+```java
+// Only enable file types you have created
+new LanguageUpdater(this, List.of("en_US"),
+    LanguageFileType.MESSAGES  // Only enable MESSAGES
+);
+```
+
+### Issue: Empty language files being created
+
+**Cause:** File type is enabled but not provided in resources.
+
+**Solution:** Only enable file types you have in resources:
+```java
+// Match file types with what you have in resources
+new LanguageUpdater(this, List.of("en_US"),
+    LanguageFileType.MESSAGES,
+    LanguageFileType.GUI
+);
+
+languageManager = new LanguageManager(this,
+    LanguageFileType.MESSAGES,
+    LanguageFileType.GUI
+);
+```
+
+### Issue: "Missing message: {key}"
+
+**Cause:** Message key doesn't exist in your language file.
+
+**Solution:**
+1. Add the key to your `messages.yml`:
+```yaml
+your_key:
+  enabled: true
+  message: "Your message here"
+```
+2. Reload the plugin or restart the server
+
+### Issue: Placeholders not replaced
+
+**Cause:** Incorrect placeholder syntax.
+
+**Solution:** Use curly braces, not other brackets:
+```yaml
+# Correct
+message: "Welcome, {player}!"
+
+# Wrong
+message: "Welcome, %player%!"
+message: "Welcome, [player]!"
+```
+
+### Issue: Colors not working
+
+**Cause:** Using wrong color code format.
+
+**Solution:** 
+```yaml
+# Legacy colors - Use &
+message: "&aGreen &cRed"
+
+# Hex colors - Use &#
+message: "&#FF5733Orange &#00FF00Green"
+
+# Mixed
+message: "&aLegacy green &#FF5733Hex orange"
+```
+
 ## Examples
 
 See the [examples directory](examples/) for complete plugin examples.
@@ -342,6 +623,88 @@ This library is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Credits
 
 Originally extracted and refactored from the SmartSpawner plugin.
+
+## Quick Reference
+
+### Resource Directory Setup
+
+```
+YourPlugin/
+└── src/main/resources/
+    ├── plugin.yml
+    ├── config.yml
+    └── language/
+        └── en_US/              ← Your language code
+            ├── messages.yml     ← Player messages
+            ├── gui.yml          ← GUI items (optional)
+            ├── formatting.yml   ← Number/entity formatting (optional)
+            └── items.yml        ← Item names (optional)
+```
+
+### Minimal messages.yml Template
+
+```yaml
+language_version: 1.0.0
+prefix: "&7[&aYourPlugin&7] &r"
+
+welcome:
+  enabled: true
+  message: "Welcome, {player}!"
+```
+
+### Common Language Codes
+
+- `en_US` - English (United States)
+- `en_GB` - English (United Kingdom)
+- `vi_VN` - Vietnamese (Vietnam)
+- `de_DE` - German (Germany)
+- `fr_FR` - French (France)
+- `es_ES` - Spanish (Spain)
+- `zh_CN` - Chinese (Simplified)
+- `ja_JP` - Japanese (Japan)
+- `ko_KR` - Korean (Korea)
+- `pt_BR` - Portuguese (Brazil)
+- `ru_RU` - Russian (Russia)
+- `it_IT` - Italian (Italy)
+
+### File Type Reference
+
+| File Type | File Name | Purpose | Common Use Cases |
+|-----------|-----------|---------|------------------|
+| `MESSAGES` | `messages.yml` | Player messages, notifications, commands | Always needed for user communication |
+| `GUI` | `gui.yml` | Inventory menus, item names/lore | Needed if you have GUI menus |
+| `FORMATTING` | `formatting.yml` | Number format, entity names | Needed for stats, leaderboards, mob names |
+| `ITEMS` | `items.yml` | Item names and descriptions | Needed for custom items |
+
+### Code Template
+
+```java
+public class YourPlugin extends JavaPlugin {
+    private LanguageManager languageManager;
+    private MessageService messageService;
+    
+    @Override
+    public void onEnable() {
+        saveDefaultConfig();
+        
+        // Step 1: Update language files (optional but recommended)
+        new LanguageUpdater(this, List.of("en_US"),
+            LanguageUpdater.LanguageFileType.MESSAGES
+        );
+        
+        // Step 2: Initialize language manager (must match file types above)
+        languageManager = new LanguageManager(this,
+            LanguageManager.LanguageFileType.MESSAGES
+        );
+        
+        // Step 3: Initialize message service
+        messageService = new MessageService(this, languageManager);
+        
+        // Step 4: Use it!
+        messageService.sendConsoleMessage("plugin_enabled");
+    }
+}
+```
 
 ## Contributing
 
